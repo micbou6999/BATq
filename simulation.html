@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baccarat Simulation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="table-background">
+        <h1>Baccarat Simulation</h1>
+        <div class="input-container">
+            <label for="deck-count">Number of Decks:</label>
+            <input type="number" id="deck-count" placeholder="e.g., 6" min="1">
+            <label for="shoe-size">Number of Cards in Shoe (auto-calculated):</label>
+            <input type="text" id="shoe-size" readonly>
+            <label for="simulation-count">Number of Simulations:</label>
+            <input type="number" id="simulation-count" placeholder="e.g., 1000" min="1">
+            <button id="simulate-button">Simulate</button>
+        </div>
+        <div id="results">
+            <h2>Simulation Results</h2>
+            <p id="rounds-played">Rounds Played: 0</p>
+            <p id="player-wins">Player Wins: 0</p>
+            <p id="banker-wins">Banker Wins: 0</p>
+            <p id="sun7-wins">Sun 7 Wins: 0</p>
+            <p id="moon8-wins">Moon 8 Wins: 0</p>
+            <p id="supreme7-wins">Supreme 7 Wins: 0</p>
+            <p id="divine9-wins">Divine 9 Wins: 0</p>
+            <p id="eclipse-wins">Eclipse Wins: 0</p>
+        </div>
+        <!-- Navigation back to the main game page -->
+        <div class="nav">
+            <a href="index.html" class="nav-link">Back to Game</a>
+        </div>
+    </div>
+    <script src="simulation.js"></script>
+</body>
+</html>

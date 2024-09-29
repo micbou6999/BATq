@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baccarat Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="table-background">
+        <h1>Baccarat Game</h1>
+        <div class="table">
+            <div class="player-section">
+                <h2>Player</h2>
+                <div id="player-cards" class="card-container"></div>
+                <div id="player-points"></div>
+            </div>
+            <div class="banker-section">
+                <h2>Banker</h2>
+                <div id="banker-cards" class="card-container"></div>
+                <div id="banker-points"></div>
+            </div>
+        </div>
+        <button id="deal-button">Deal</button>
+        <div id="result"></div>
+        <!-- Display the new betting options and their results -->
+        <div id="special-bets">
+            <h3>Special Bets Results</h3>
+            <p id="sun7-result">Sun 7: No</p>
+            <p id="moon8-result">Moon 8: No</p>
+            <p id="supreme7-result">Supreme 7: No</p>
+            <p id="divine9-result">Divine 9: No</p>
+            <p id="eclipse-result">Eclipse: No</p>
+        </div>
+        <!-- Navigation to the simulation page -->
+        <div class="nav">
+            <a href="simulation.html" class="nav-link">Go to Simulation</a>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
