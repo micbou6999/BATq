@@ -3,73 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sun 7 Probability Calculator</title>
+    <title>Baccarat Simulation</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add custom styles for the grid and color coding */
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust column width as needed */
+            grid-auto-rows: minmax(50px, auto); /* Adjust row height as needed */
+            gap: 5px;
+            margin-top: 20px;
+        }
+        .result {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+        }
+        .player { background-color: blue; }
+        .tie { background-color: green; }
+        .banker { background-color: red; }
+        .sun7 { background-color: yellow; color: black; }
+        .moon8 { background-color: purple; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Sun 7 Probability Calculator</h1>
-
-        <!-- Input for Sun 7 Calculation -->
-        <div class="sun7-input">
-            <h3>Enter Cards to Calculate Sun 7 Probability</h3>
-            <input type="text" id="sun7-cards-input" placeholder="Enter cards like 'K K 4 K Q 7'">
-            <button id="add-cards-button">Add Cards</button>
-            <div id="sun7-probability-result">Sun 7 Probability: </div>
+    <div class="table-background">
+        <h1>Baccarat Simulation</h1>
+        <div class="input-container">
+            <label for="deck-count">Number of Decks:</label>
+            <input type="number" id="deck-count" placeholder="e.g., 6" min="1">
+            <label for="shoe-size">Number of Cards in Shoe (auto-calculated):</label>
+            <input type="text" id="shoe-size" readonly>
+            <button id="simulate-button">Simulate</button>
         </div>
-
-        <!-- Game Statistics Section -->
-        <div class="statistics">
-            <div class="stat-box">
-                <h4>Remaining Cards in Shoe</h4>
-                <p id="remaining-cards">416</p>
-            </div>
-            <div class="stat-box">
-                <h4>Player Wins</h4>
-                <p id="player-wins">0</p>
-            </div>
-            <div class="stat-box">
-                <h4>Banker Wins</h4>
-                <p id="banker-wins">0</p>
-            </div>
-            <div class="stat-box">
-                <h4>Ties</h4>
-                <p id="ties">0</p>
-            </div>
+        <div id="results-grid" class="result-grid">
+            <!-- Simulation results will be displayed here in grid format -->
         </div>
-
-        <!-- Percentage Bar -->
-        <div class="percentage-bar-container">
-            <div class="player-win-bar" id="player-win-bar" style="width: 0%;">Player Wins</div>
-            <div class="banker-win-bar" id="banker-win-bar" style="width: 0%;">Banker Wins</div>
-            <div class="tie-bar" id="tie-bar" style="width: 0%;">Ties</div>
-        </div>
-
-        <!-- Special Event Occurrences -->
-        <div class="special-events">
-            <div class="event-box">
-                <h4>Sun 7 Occurrences</h4>
-                <p id="sun7-occurrences">0</p>
-            </div>
-            <div class="event-box">
-                <h4>Moon 8 Occurrences</h4>
-                <p id="moon8-occurrences">0</p>
-            </div>
-            <div class="event-box">
-                <h4>Supreme 7 Occurrences</h4>
-                <p id="supreme7-occurrences">0</p>
-            </div>
-            <div class="event-box">
-                <h4>Divine 9 Occurrences</h4>
-                <p id="divine9-occurrences">0</p>
-            </div>
-            <div class="event-box">
-                <h4>Eclipse Occurrences</h4>
-                <p id="eclipse-occurrences">0</p>
-            </div>
+        <div class="nav">
+            <a href="index.html" class="nav-link">Back to Game</a>
         </div>
     </div>
     <script src="sun7.js"></script>
 </body>
 </html>
-ååå

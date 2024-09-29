@@ -1,17 +1,4 @@
-// Initialize the shoe with a specified number of decks
-let shoe = initializeShoe(8); // Start with 8 decks
-
-// Statistics tracking
-let playerWins = 0;
-let bankerWins = 0;
-let ties = 0;
-let sun7Occurrences = 0;
-let moon8Occurrences = 0;
-let supreme7Occurrences = 0;
-let divine9Occurrences = 0;
-let eclipseOccurrences = 0;
-
-// Initialize shoe
+// Function to initialize the shoe with the given number of decks
 function initializeShoe(deckCount) {
     const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
     const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
@@ -25,61 +12,123 @@ function initializeShoe(deckCount) {
         });
     }
 
+    // Shuffle the shoe
+    for (let i = shoe.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shoe[i], shoe[j]] = [shoe[j], shoe[i]];
+    }
+
     return shoe;
 }
 
-// Parse input cards and remove them from the shoe
-function parseAndRemoveCards(input, shoe) {
-    const valueMap = { '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 'jack', 'Q': 'queen', 'K': 'king', 'A': 'ace' };
-    const cards = input.trim().split(' ');
-
-    cards.forEach(card => {
-        const value = valueMap[card.toUpperCase()];
-        const index = shoe.findIndex(c => c.value === value);
-        if (index > -1) shoe.splice(index, 1); // Remove the card from the shoe
-    });
+// Function to calculate Baccarat points
+function calculatePoints(cards) {
+    const valueMap = {
+        '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
+        '10': 0, 'J': 0, 'Q': 0, 'K': 0, 'A': 1
+    };
+    let total = cards.reduce((sum, card) => sum + valueMap[card.value], 0);
+    return total % 10;
 }
 
-// Calculate the probability of Sun 7 based on remaining cards
-function calculateSun7Probability(shoe) {
-    const remainingSevens = shoe.filter(card => card.value === '7').length;
-    const remainingCards = shoe.length;
-    return (remainingSevens / remainingCards) * 100;
-}
+// Function to simulate a single round of Baccarat and track special bets
+function simulateRound(shoe) {
+    const playerCards = [shoe.pop(), shoe.pop()];
+    const bankerCards = [shoe.pop(), shoe.pop()];
 
-// Update the statistics section
-function updateStatistics() {
-    document.getElementById('remaining-cards').innerText = shoe.length;
-    document.getElementById('player-wins').innerText = playerWins;
-    document.getElementById('banker-wins').innerText = bankerWins;
-    document.getElementById('ties').innerText = ties;
-    document.getElementById('sun7-occurrences').innerText = sun7Occurrences;
-    document.getElementById('moon8-occurrences').innerText = moon8Occurrences;
-    document.getElementById('supreme7-occurrences').innerText = supreme7Occurrences;
-    document.getElementById('divine9-occurrences').innerText = divine9Occurrences;
-    document.getElementById('eclipse-occurrences').innerText = eclipseOccurrences;
+    const playerPoints = calculatePoints(playerCards);
+    const bankerPoints = calculatePoints(bankerCards);
 
-    const totalRounds = playerWins + bankerWins + ties;
-    if (totalRounds > 0) {
-        document.getElementById('player-win-bar').style.width = `${(playerWins / totalRounds) * 100}%`;
-        document.getElementById('banker-win-bar').style.width = `${(bankerWins / totalRounds) * 100}%`;
-        document.getElementById('tie-bar').style.width = `${(ties / totalRounds) * 100}%`;
+    let playerThirdCard;
+    if (playerPoints <= 5) {
+        playerThirdCard = shoe.pop();
+        playerCards.push(playerThirdCard);
     }
+
+    let bankerThirdCard;
+    if (bankerPoints <= 2 || (bankerPoints === 3 && playerThirdCard && playerThirdCard.value !== '8') ||
+        (bankerPoints === 4 && playerThirdCard && ['2', '3', '4', '5', '6', '7'].includes(playerThirdCard.value)) ||
+        (bankerPoints === 5 && playerThirdCard && ['4', '5', '6', '7'].includes(playerThirdCard.value)) ||
+        (bankerPoints === 6 && playerThirdCard && ['6', '7'].includes(playerThirdCard.value))) {
+        bankerThirdCard = shoe.pop();
+        bankerCards.push(bankerThirdCard);
+    }
+
+    const finalPlayerPoints = calculatePoints(playerCards);
+    const finalBankerPoints = calculatePoints(bankerCards);
+
+    let result = {
+        winner: finalPlayerPoints > finalBankerPoints ? 'player' : finalBankerPoints > finalPlayerPoints ? 'banker' : 'tie',
+        sun7: false,
+        moon8: false
+    };
+
+    // Sun 7: Banker wins with a 3-Card 7
+    if (finalBankerPoints === 7 && bankerCards.length === 3 && finalBankerPoints > finalPlayerPoints) {
+        result.sun7 = true;
+    }
+
+    // Moon 8: Player wins with a 3-Card 8
+    if (finalPlayerPoints === 8 && playerCards.length === 3 && finalPlayerPoints > finalBankerPoints) {
+        result.moon8 = true;
+    }
+
+    return result;
 }
 
-document.getElementById('add-cards-button').addEventListener('click', function() {
-    const input = document.getElementById('sun7-cards-input').value;
+// Function to handle the simulation and display the results
+document.getElementById('simulate-button').addEventListener('click', function() {
+    const deckCount = parseInt(document.getElementById('deck-count').value);
 
-    // Parse and remove the input cards from the shoe
-    parseAndRemoveCards(input, shoe);
+    if (isNaN(deckCount) || deckCount <= 0) {
+        alert('Please enter a valid number of decks.');
+        return;
+    }
 
-    // Calculate and display Sun 7 probability
-    const probability = calculateSun7Probability(shoe);
-    document.getElementById('sun7-probability-result').innerText = `Sun 7 Probability: ${probability.toFixed(2)}%`;
+    const totalCards = deckCount * 52;
+    document.getElementById('shoe-size').value = totalCards; // Display the total number of cards in the shoe
 
-    // Update statistics after adding cards
-    updateStatistics();
+    const shoe = initializeShoe(deckCount);
+    const resultsGrid = document.getElementById('results-grid');
+    resultsGrid.innerHTML = ''; // Clear previous results
 
-    // Clear the input field for the next input
-    document.getElementById('sun7-cards-input').value = '';
+    let currentRow = 0;
+    let currentColumn = 0;
+
+    while (shoe.length >= 6) { // Need at least 6 cards for a round
+        const result = simulateRound(shoe);
+
+        const resultElement = document.createElement('div');
+        resultElement.classList.add('result');
+
+        if (result.winner === 'player') {
+            resultElement.classList.add('player');
+            resultElement.textContent = 'Player Wins';
+        } else if (result.winner === 'banker') {
+            resultElement.classList.add('banker');
+            resultElement.textContent = 'Banker Wins';
+        } else {
+            resultElement.classList.add('tie');
+            resultElement.textContent = 'Tie';
+        }
+
+        if (result.sun7) {
+            resultElement.classList.add('sun7');
+            resultElement.textContent = 'Sun 7: Banker Wins with 3-Card 7';
+        }
+
+        if (result.moon8) {
+            resultElement.classList.add('moon8');
+            resultElement.textContent = 'Moon 8: Player Wins with 3-Card 8';
+        }
+
+        // Determine the position in the grid
+        if (currentRow === 6) {
+            currentRow = 0;
+            currentColumn++;
+        }
+
+        resultsGrid.appendChild(resultElement);
+        currentRow++;
+    }
 });
